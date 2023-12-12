@@ -1,20 +1,36 @@
 # ITIS-6177_FinalProject_AzureAILanguage_Summarization
 
-# Entity Recognition
+# Summarization
 
-This API is a wrapper to the [Azure's cognitive services API](https://azure.microsoft.com/en-us/products/cognitive-services/language-service/) with different languages services.
+This readme file contains documentation for my API I've created for Summaraization using AzureAILanguage. It is actively used for Text Analytics.
 
-[Entity recognition](https://en.wikipedia.org/wiki/Azure_Cognitive_Search) using these services for Language enables you to build apps with industry-leading natural language understanding capabilities without machine learning expertise.
+The AzureAILanguage resource is a wrapper to Azure's Cognitive Services API, specifically the [Text Analytics service](https://azure.microsoft.com/en-us/products/ai-services/ai-language/) providing various language services.
 
+[Summarization](https://learn.microsoft.com/en-us/azure/ai-services/language-service/summarization/overview?tabs=document-summarization) by using these services for Language, you will be exposed to powerful features for extracting essential information from unstructured text. Document summarization, available in extractive and abstractive approaches, generates concise summaries by extracting key sentences or crafting new ones to capture the main idea. Conversation summarization accepts various speech artifacts and extracts pertinent content for understanding. Utilize this service via REST API or libraries in languages like Python and C#. 
 
-![image](/public/images/si10.PNG)
-![image](/public/images/si8.PNG)
+![image](https://learn.microsoft.com/en-us/azure/ai-services/language-service/custom-text-analytics-for-health/media/development-lifecycle.png)
+![image](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/_images/conversation-summarization-overview.png)
+
 
 * ref: https://learn.microsoft.com/en-us/azure/cognitive-services/language-service/custom-text-classification/overview
+* ref: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/conversation-summarization
+
+
+# Service Capabilities
+
+Azure provides services like document summarization and conversation summarization. I have utilized document summarization.
+
+Document Summarization: With this approach, long documents or articles are condensed into shorter versions but the essential content is retained. There are often two methods:
+
+1. Extractive Summarization: This method creates a summary by picking the most important sentences or sections from the source text, thereby "extracting" pertinent information without changing it.
+2. Abstractive Summarization: This technique creates fresh, streamlined content that may not be found in the source text exactly. It reinterprets and rewords the data to produce a logical synopsis.
+
 
 # Development
 
-Azure Cognitive Search is the only cloud search service with built-in AI capabilities that enrich all types of information to help you identify and explore relevant content at scale. Use cognitive skills for vision, language, and speech, or use custom machine learning models to uncover insights from all types of content. Azure Cognitive Search also offers semantic search capability, which uses advanced machine learning techniques to understand user intent and contextually rank the most relevant search results.
+Text Analytics is a unique offering that uses AI to handle language-related activities in a comprehensive manner. It gives people the ability to comprehend, evaluate, and draw conclusions from textual data. This service includes cognitive abilities for language analysis, making it possible to extract useful data from many kinds of text. It provides deep insights and makes semantic search easier with its sophisticated machine learning models. Through contextual ranking of search results, AzureAILanguage facilitates user intent understanding and improves search relevancy for effective information exploration.
+
+This version emphasizes the capabilities of AzureAILanguage - Text Analytics specifically for language-related tasks and extracting insights from textual data.
 
 **Environment And Libraries Used**
 
@@ -22,285 +38,110 @@ Entity Recognition:
 
 - Protocol used: HTTP
 - Development language: Node.js - Express.js
-- Libraries: @azure/ai-text-analytics, swagger-jsdoc, swagger-ui-express
-- API Checker : swagger, postman
+- Libraries: @azure/ai-text-analytics
+- API Checker : postman
 
 ## Data Validation
-I had verified if the input to the API is an array of strings. The API raises an error if it is of any other datatype.
-![Image](/public/images/si1.PNG)
+To validate the API, I used the help of [Postman](https://learning.postman.com/docs/introduction/overview/).
 
-## Data Sanitization
-* I had used data sanitization techniques to avoid like .trim() to avoid spaces and replaced other special characters.To ensure the input  contains only text. 
+I had verified a situation where I give an empty string
+![Image](https://i.ibb.co/B25q9kb/SI1.png)
 
-![Image](/public/images/si2.PNG)
+I also verified wheres I removed the ID, and an error was thrown saying one input is missing from the attribute Id
+![image](https://i.ibb.co/42br0p0/SI2.png)
+
+I have written the code to handle extractive summarization results.
+![image](https://i.ibb.co/MBXwCR2/SI3.png)
+
 
 # Try Out
 
-Temporarily the API is hosted in one of the droplets in Digital Ocean, to run some tests and checkout the functionality
+In order to conduct testing and examine the functionality, the API is now hosted in one of Digital Ocean's droplets.
 
 ### Server Endpoint
 
 ```
-http://159.223.131.133:3000/
+http://157.245.10.149:3000/
 ```
 
 ### API Endpoint
-* Used versioning to the API which is one of the good coding practice. It also helps us to iterate faster when the needed changes are identified in the APIs
+
 ```
-http://159.223.131.133:3000/api/v1/recognition/
+http://157.245.10.149:3000/summary
 ```
 
-### Post Request Body
+### Sample Post Request Body
 ```application/json```
 ```Array of strings ```
-```[ "<Your Text or Conversation goes here>"]```
+```json
+{
+  "documents": [
+    {
+      "language": "en",
+      "id": "2",
+      "text": "In the realm of technology, innovation shapes our daily lives. From the seamless integration of artificial intelligence to the rapid evolution of mobile devices, the digital landscape is dynamic. As data becomes the currency of the future, cybersecurity emerges as a paramount concern"
+    }
+  ]
+}
+```
 
 ## Possible Responses :
 
 | Response code | Description                                                         |
 | ------------- | ------------------------------------------------------------------  |
-| 200           | Entities recognized successfully                                    |
-| 400           | Invalid data format. The input must be a non-empty array of strings |
-| 500           | Something went wrong on the server. Please try again later.         |
+| 200           | Text was summarized successfully                                    | |
+| 500           | Internal Sevrer Error         |
 
 
 ### Output:
 
-Identifies, Recognize the Entities and Key phrases and link them.
-
-## Swagger Endpoint
+Recognizes and identifies the text and gives the summarized version of the text.
 
 
-Swagger for the API added for testing the API withing the host
-
-```
-http://159.223.131.133:3000/docs
-```
 
 # Setup in Local
 
-1. Create [Azure language resource](https://azure.microsoft.com/en-us/products/cognitive-services/language-service/#overview) and copy the Key and Endpoint
-2. Set the Key and Endpoint as environment variables with the variable names API_KEY and API_ENDPOINT respectively.
+1. Create [Azure language resource](https://azure.microsoft.com/en-us/products/ai-services/ai-language/#overview) and copy the Key and Endpoint
+2. Set the Key and Endpoint as environment variables with the variable names LANGUAGE_KEY and LANGUAGE_ENDPOINT respectively.
 3. Ensure that you have Node.js installed. If not, download and install the latest version of Node.js.
 4. Clone the repository to your local machine.
 5. Open a terminal and navigate to the project's directory, then run the command npm install to install the required dependencies.
 6. To start the server locally, use the command nodemon app.js in the terminal.
 7. Test the server by accessing the following endpoint in your browser: http://localhost:3000/
-8.To test the API, send a POST request to the following endpoint: http://localhost:3000/api/v1/entity/, with the payload containing the text you want to analyze for sentiment.
-9.For Swagger documentation, use the following endpoint in your browser: http://localhost:3000/docs
+8.To test the API, send a POST request to the following endpoint: http://157.245.10.149:3000/summary, with the corresponsing post body and analyze for summarization.
 
 # Usage:
 
-## EntityRecognition
+## Document Summarization
 
-* This API uses the entity recognition endpoint to detect entities in a document using Named Entity Recognition (NER) and prints them along with their recognized entity type.
+* The purpose of document summarization is to condense content that readers deem too lengthy to read. Articles, papers, or documents are summarized into essential sentences using both extractive and abstractive summarizing techniques.
  
 **Request:**
 
 ```
 curl -X 'POST' \
-  'http://159.223.131.133:3000/apis/v1/entity/RecognizeEntities' \
+  'http://157.245.10.149:3000/summary' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '[
-  "This is Revanth Kumar Galla from India"
+  "Generative AI refers to a subset of artificial intelligence that focuses on creating new content, be it images, text, or even music, mimicking human-like creativity. This technology leverages neural networks to generate original and diverse outputs based on patterns and examples from large datasets. Generative AI has showcased remarkable advancements in various fields, enabling applications in art, content creation, and even aiding in problem-solving by producing innovative solutions based on learned patterns."
 ]'
 ```
 
 **Response:**
 
 ```[
-  {
-    "id": "0",
-    "warnings": [],
-    "entities": [
-      {
-        "text": "Revanth Kumar Galla",
-        "category": "Person",
-        "offset": 8,
-        "length": 19,
-        "confidenceScore": 1
-      },
-      {
-        "text": "India",
-        "category": "Location",
-        "subCategory": "GPE",
-        "offset": 33,
-        "length": 5,
-        "confidenceScore": 1
-      }
-    ]
-  }
-]
-```
-## PiiEntityRecognition
-
-  * This API uses the PII-recognition endpoint to detect sensitive personally identifiable information in documents (such as social security numbers, addresses, and more). The API returns information about the location of the sensitive information in the text, which we use to perform redaction of the PII text.
-
-**Request:**
-
-```
-curl -X 'POST' \
-  'http://159.223.131.133:3000/apis/v1/entity/RecognizePiiEntities' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '[
-  "I am Revanth Kumar Galla with mobile number 980-382-9999 and ssn 852147963"
-]'
-
-```
-
-**Response:**
-
-```[
-  {
-    "id": "0",
-    "warnings": [],
-    "redactedText": "I am ******************* with mobile number ************ and ssn *********",
-    "entities": [
-      {
-        "text": "Revanth Kumar Galla",
-        "category": "Person",
-        "offset": 5,
-        "length": 19,
-        "confidenceScore": 0.84
-      },
-      {
-        "text": "980 382 9999",
-        "category": "PhoneNumber",
-        "offset": 44,
-        "length": 12,
-        "confidenceScore": 0.8
-      },
-      {
-        "text": "852147963",
-        "category": "PhoneNumber",
-        "offset": 65,
-        "length": 9,
-        "confidenceScore": 0.8
-      },
-      {
-        "text": "852147963",
-        "category": "USSocialSecurityNumber",
-        "offset": 65,
-        "length": 9,
-        "confidenceScore": 0.55
-      }
-    ]
-  }
-]
-```
-## Extract Key Phrase
-
-* This API call uses the key-phrase extraction endpoint to determine which words or phrases in a document are of particular importance.
-
-**Request:**
-
-```
-curl -X 'POST' \
-  'http://159.223.131.133:3000/apis/v1/entity/ExtractKeyPhrase' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '[
-  "Redmond is a city in King County, Washington, United States, located 15 miles east of Seattle.",
-  "I need to take my cat to the veterinarian.",
-  "I will travel to South America in the summer."
-]'
-```
-
-**Response:**
-
-```[
-  {
-    "id": "0",
-    "warnings": [],
-    "keyPhrases": [
-      "King County  Washington  United States",
-      "Redmond",
-      "city",
-      "Seattle"
-    ]
-  },
-  {
-    "id": "1",
-    "warnings": [],
-    "keyPhrases": [
-      "cat",
-      "veterinarian"
-    ]
-  },
-  {
-    "id": "2",
-    "warnings": [],
-    "keyPhrases": [
-      "South America",
-      "summer"
-    ]
-  }
+    {
+        "documentId": "2",
+        "summary": "Generative AI refers to a subset of artificial intelligence that focuses on creating new content, be it images, text, or even music, mimicking human-like creativity.\nThis technology leverages neural networks to 
+generate original and diverse outputs based on patterns and examples from large datasets."
+    }
 ]
 ```
 
-## Recognize Entity Linking
 
-* This API uses the linked entity recognition endpoint to detect well-known entities in a document and connect (link) them to entries in an external knowledge base (such as Wikipedia) that contain information about the entity.
-
-**Request:**
-
-```
-curl -X 'POST' \
-  'http://159.223.131.133:3000/apis/v1/entity/RecognizeEntityLinking' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '[
-  "I am studying in Unc charlotte"
-]'
-
-```
-
-**Response:**
-
-```[
-  {
-    "id": "0",
-    "warnings": [],
-    "entities": [
-      {
-        "name": "University of North Carolina at Charlotte",
-        "matches": [
-          {
-            "confidenceScore": 0.2,
-            "text": "Unc charlotte",
-            "offset": 17,
-            "length": 13
-          }
-        ],
-        "language": "en",
-        "dataSourceEntityId": "University of North Carolina at Charlotte",
-        "url": "https://en.wikipedia.org/wiki/University_of_North_Carolina_at_Charlotte",
-        "dataSource": "Wikipedia",
-        "bingEntitySearchApiId": "8868d55f-2f1f-1ccb-23ed-5a37e83e769c"
-      }
-    ]
-  }
-]
-```
-## Use the web application
-
-* Had also developed a basic front-end version to these API's which allows users to send the request.
-![Image](/public/images/si3.PNG)
-* You can click on the respective link to test the API. 
-* You can enter the text in the form of array of Strings and click submit. 
-![Image](/public/images/si4.PNG)
-* which will use the respective azure endpoints and extact the entities.
-![Image](/public/images/si5.PNG) 
-
-## Use Swagger in the web application
-
-* Implemented swagger to test the API's 
-* You can use the test it out option on the different requests to test the API
-* ![Image](/public/images/si6.PNG)
 
 ## Testing using PostMan
 
-* Had verified the API's using postman.
-![Image](/public/images/si9.PNG) 
+* I verified the API's with the help of postman.
+![Image](https://i.ibb.co/TPDYWjD/SI4.png) 
